@@ -4,18 +4,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class InputParser {
     private final String[] transportation = {"Airway", "Railway", "Highway"};
+    private final String path;
     Map<String, List<List<String>>> mapOfMatrices = new HashMap<>();
     List<String> indexes = new ArrayList<>();
-    private String path = "";
 
     public InputParser(String path) {
         this.path = path;
@@ -54,7 +52,7 @@ public class InputParser {
                     } else {
                         if (token.equals("0") || token.equals("1")) {
                             parsedLine.add(token);
-                        } else if (!token.equals("Cities") && !indexes.contains(token)){
+                        } else if (!token.equals("Cities") && !indexes.contains(token)) {
                             indexes.add(token);
                         }
                     }
@@ -65,10 +63,34 @@ public class InputParser {
                 parsedLine.clear();
             }
             printMatrices();
+            createGraph();
 
 
         } catch (IOException e) {
             System.err.println("ERROR: something went wrong while reading the file: " + e.getMessage());
+        }
+    }
+    private void createGraph() {
+        int numberOfVertices = mapOfMatrices.get("Airway").get(0).size();
+        var graph = new Graph(numberOfVertices);
+
+        for (Map.Entry<String, List<List<String>>> entry : mapOfMatrices.entrySet()) {
+            var list = entry.getValue();
+            var typeStr = entry.getKey();
+
+            for (int i = 0; i < list.size(); i++) {
+                // list of list of str
+                for (int j = 0; j < list.get(i).size(); j++) {
+                    // list of str
+                    var yes = Integer.parseInt(list.get(i).get(j));
+                    if (yes == 1) {
+                        Transportation type = Transportation.valueOf(typeStr.toUpperCase()); // this is cool
+//                    System.out.println("transportation type: " + type);
+                        graph.addEdge(i, j, type);
+                    }
+
+                }
+            }
         }
     }
 

@@ -4,5 +4,6 @@ public class Main {
         InputParser parser = new InputParser(inputPath);
         parser.parse();
 
+
     }
 }
