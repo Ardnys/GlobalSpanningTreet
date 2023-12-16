@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,7 +32,7 @@ public class InputParser {
     }
 
 
-    public void parse() {
+    public Optional<Graph> parse() {
         try (var reader = Files.newBufferedReader(Paths.get(path))) {
             String line;
             List<String> parsedLine = new ArrayList<>();
@@ -62,15 +63,15 @@ public class InputParser {
                 }
                 parsedLine.clear();
             }
-            printMatrices();
-            createGraph();
-
-
+//            printMatrices();
         } catch (IOException e) {
             System.err.println("ERROR: something went wrong while reading the file: " + e.getMessage());
+            return Optional.empty();
         }
+
+        return Optional.of(createGraph());
     }
-    private void createGraph() {
+    private Graph createGraph() {
         int numberOfVertices = mapOfMatrices.get("Airway").get(0).size();
         var graph = new Graph(numberOfVertices);
 
@@ -88,10 +89,13 @@ public class InputParser {
 //                    System.out.println("transportation type: " + type);
                         graph.addEdge(i, j, type);
                     }
-
                 }
             }
         }
+        for (int i = 0; i < indexes.size(); i++) {
+            graph.addIndex(i, indexes.get(i));
+        }
+        return graph;
     }
 
 
