@@ -7,7 +7,8 @@ public class Main {
             System.exit(1);
             return null;
         });
-        graph.q1("City1", "City2", "   A1    R1 H2  ");
+        graph.q1("City1", "City2", "H2 R1 A1");
+        graph.q2("City1", "City2", 3);
 
 
     }
