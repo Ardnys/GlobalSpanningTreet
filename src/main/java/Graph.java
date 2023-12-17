@@ -158,19 +158,16 @@ public class Graph {
         var neighs = adjMatrix.get(cityIdx);
 
         for (int i = 0; i < neighs.size(); i++) {
-            // maybe check if it's already visited
             if (visited.contains(i)) continue;
             if (citiesLeft != 0 && i == destinationIdx) continue;
             var trans = neighs.get(i);
             for (var t : trans) {
-                // stuff
                 visited.add(i);
                 path.add(t.toString());
                 path.add(indexToCity.get(i));
                 int prevSize = paths.size();
                 coastin(i, destinationIdx, citiesLeft-1, visited, path, paths);
                 if (prevSize == paths.size()) {
-                    // could not find
                     visited.remove(i);
                 }
             }
@@ -181,5 +178,42 @@ public class Graph {
         if (!path.isEmpty()) {
             path.pop();
         }
+    }
+    public List<String> q3(String city1, String city2, Transportation type) {
+        Set<Integer> visited = new HashSet<>();
+        Stack<String> path = new Stack<>();
+        List<String> paths = new ArrayList<>();
+
+        visited.add(cityToIndex.get(city1));
+        path.add(city1);
+
+        driftin(cityToIndex.get(city1), cityToIndex.get(city2), type, visited, path, paths);
+        System.out.println(String.join("\n", paths));
+
+        return new ArrayList<>();
+    }
+
+    private void driftin(int cityIdx, int destinationIdx, Transportation type,
+                         Set<Integer> visited, Stack<String> path, List<String> paths) {
+        if (cityIdx == destinationIdx) {
+            var pathStr = path.toString();
+            paths.add(pathStr);
+            path.pop();
+            visited.remove(destinationIdx);
+            return;
+        }
+        var neighs = adjMatrix.get(cityIdx);
+        for (int i = 0; i < neighs.size(); i++) {
+            if (visited.contains(i)) continue;
+            var trans = neighs.get(i).stream().filter(t -> t == type).collect(Collectors.toList());
+            if (trans.isEmpty()) continue;
+            visited.add(i);
+            path.add(indexToCity.get(i));
+            int prevSize = paths.size();
+            driftin(i, destinationIdx, type, visited, path, paths);
+            if (prevSize == paths.size()) visited.remove(i);
+        }
+        visited.remove(cityIdx);
+        path.pop();
     }
 }

@@ -10,7 +10,8 @@ public class Main {
         graph.printGraph();
         System.out.println("------------------------");
 //        graph.q1("City1", "City2", "H2 R1 A1");
-        graph.q2("City1", "City2", 3);
+//        graph.q2("City1", "City2", 3);
+        graph.q3("City1", "City2", Transportation.RAILWAY);
 
 
     }
