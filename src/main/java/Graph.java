@@ -1,9 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,6 +22,9 @@ public class Graph {
             }
             adjMatrix.add(row);
         }
+    }
+    public void execute(Queue<Command> commandQueue) {
+        // TODO: convert commands into things that can be executed in the functions here
     }
 
     public void addEdge(int i, int j, Transportation type) {
@@ -49,7 +51,7 @@ public class Graph {
         }
     }
 
-    public String q1(String city1, String city2, String order) {
+    private String q1(String city1, String city2, String order) {
         var city1Idx = cityToIndex.get(city1);
         var destIdx = cityToIndex.get(city2);
 
@@ -81,7 +83,7 @@ public class Graph {
         Stack<String> path = new Stack<>();
 
         path.add(indexToCity.get(city1Idx));
-        boolean yes = cruisin(city1Idx, 0, transOrder, destIdx,  path);
+        boolean yes = cruisin(city1Idx, 0, transOrder, destIdx, path);
         System.out.printf("found: %b%nset: %nstr: %s%n", yes, path);
 
         // TODO: fix return statement
@@ -89,7 +91,7 @@ public class Graph {
     }
 
     private boolean cruisin(int cityIdx, int orderIdx, List<Transportation> order, int destinationIdx,
-                             Stack<String> path) {
+                            Stack<String> path) {
         if (cityIdx == destinationIdx && orderIdx == order.size()) return true;
         if (orderIdx >= order.size()) return false;
 
@@ -124,7 +126,8 @@ public class Graph {
         path.pop();
         return false;
     }
-    public List<String> q2(String city1, String city2, int nCities) {
+
+    private List<String> q2(String city1, String city2, int nCities) {
         Stack<String> path = new Stack<>();
         List<String> paths = new ArrayList<>();
 
@@ -137,7 +140,7 @@ public class Graph {
     }
 
     private void coastin(int cityIdx, int destinationIdx, int citiesLeft,
-                             Stack<String> path, List<String> paths) {
+                         Stack<String> path, List<String> paths) {
         if (cityIdx == destinationIdx && citiesLeft == -1) {
             var pathStr = path.toString();
             paths.add(pathStr);
@@ -156,7 +159,7 @@ public class Graph {
                 path.add(t.toString());
                 path.add(indexToCity.get(i));
                 int prevSize = paths.size();
-                coastin(i, destinationIdx, citiesLeft-1, path, paths);
+                coastin(i, destinationIdx, citiesLeft - 1, path, paths);
                 if (prevSize == paths.size()) {
                     path.pop();
                 }
@@ -168,7 +171,8 @@ public class Graph {
             path.pop();
         }
     }
-    public List<String> q3(String city1, String city2, Transportation type) {
+
+    private List<String> q3(String city1, String city2, Transportation type) {
         Stack<String> path = new Stack<>();
         List<String> paths = new ArrayList<>();
 

@@ -71,6 +71,7 @@ public class InputParser {
 
         return Optional.of(createGraph());
     }
+
     private Graph createGraph() {
         int numberOfVertices = mapOfMatrices.get("Airway").get(0).size();
         var graph = new Graph(numberOfVertices);
