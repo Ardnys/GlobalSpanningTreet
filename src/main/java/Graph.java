@@ -56,7 +56,6 @@ public class Graph {
 
         List<Transportation> transOrder = new ArrayList<>();
 
-
         var transports = Stream.of(order.split(" ")).filter(s -> !s.isEmpty()).map(String::trim).collect(Collectors.toList());
         for (var t : transports) {
             int times = Integer.parseInt(t.substring(1));
@@ -85,41 +84,39 @@ public class Graph {
         boolean yes = cruisin(city1Idx, 0, transOrder, destIdx, visited, path);
         System.out.printf("found: %b%nset: %s%nstr: %s%n", yes, visited, path);
 
-
+        // TODO: fix return statement
         return "";
     }
 
-    private boolean cruisin(int cityIdx, int orderIdx, List<Transportation> order, int destinationIdx, Set<Integer> visited, Stack<String> path) {
-
+    private boolean cruisin(int cityIdx, int orderIdx, List<Transportation> order, int destinationIdx,
+                            Set<Integer> visited, Stack<String> path) {
+        // TODO: tidy up the arguments, maybe remove visited and just use path?
         if (cityIdx == destinationIdx && orderIdx == order.size()) return true;
         if (orderIdx >= order.size()) return false;
 
         var trans = order.get(orderIdx);
         var neighs = adjMatrix.get(cityIdx);
         for (int i = 0; i < neighs.size(); i++) {
-            if (orderIdx == order.size() - 1) {
-                if (neighs.get(i).contains(trans) && !visited.contains(i)) {
-                    System.out.printf("cruisin in %s to %s by %s%n", indexToCity.get(cityIdx), indexToCity.get(i), trans);
-                    visited.add(i);
-                    path.add(indexToCity.get(i));
+            boolean validMove = neighs.get(i).contains(trans) && !visited.contains(i);
+            if (orderIdx == order.size() - 1 && validMove) {
+                System.out.printf("cruisin in %s to %s by %s%n", indexToCity.get(cityIdx), indexToCity.get(i), trans);
+                visited.add(i);
+                path.add(indexToCity.get(i));
+                System.out.println("visited: " + visited);
 
-                    System.out.println("visited: " + visited);
-                    if (cruisin(i, orderIdx + 1, order, destinationIdx, visited, path)) {
-                        return true;
-                    } else {
-                        visited.remove(i);
-                        System.out.println("trying again");
-
-                    }
+                if (cruisin(i, orderIdx + 1, order, destinationIdx, visited, path)) {
+                    return true;
+                } else {
+                    visited.remove(i);
+                    System.out.println("trying again");
                 }
             } else {
-                if (i != destinationIdx && neighs.get(i).contains(trans) && !visited.contains(i)) {
+                if (i != destinationIdx && validMove) {
                     System.out.printf("cruisin in %s to %s by %s%n", indexToCity.get(cityIdx), indexToCity.get(i), trans);
-
                     visited.add(i);
                     path.add(indexToCity.get(i));
-
                     System.out.println("visited: " + visited);
+
                     if (cruisin(i, orderIdx + 1, order, destinationIdx, visited, path)) {
                         return true;
                     } else {
@@ -128,18 +125,61 @@ public class Graph {
                     }
                 }
             }
-
         }
         visited.remove(cityIdx);
         path.pop();
-
         return false;
     }
     public List<String> q2(String city1, String city2, int nCities) {
+        Set<Integer> visited = new HashSet<>();
+        Stack<String> path = new Stack<>();
+        List<String> paths = new ArrayList<>();
 
+        visited.add(cityToIndex.get(city1));
+        path.add(city1);
 
+        coastin(cityToIndex.get(city1), cityToIndex.get(city2), nCities, visited, path, paths);
+        System.out.println(String.join("\n", paths));
 
         return new ArrayList<>();
     }
 
+    private void coastin(int cityIdx, int destinationIdx, int citiesLeft,
+                            Set<Integer> visited, Stack<String> path, List<String> paths) {
+        if (cityIdx == destinationIdx && citiesLeft == -1) {
+            var pathStr = path.toString();
+            paths.add(pathStr);
+            path.pop();
+            path.pop();
+            visited.remove(destinationIdx);
+            return;
+        }
+
+        var neighs = adjMatrix.get(cityIdx);
+
+        for (int i = 0; i < neighs.size(); i++) {
+            // maybe check if it's already visited
+            if (visited.contains(i)) continue;
+            if (citiesLeft != 0 && i == destinationIdx) continue;
+            var trans = neighs.get(i);
+            for (var t : trans) {
+                // stuff
+                visited.add(i);
+                path.add(t.toString());
+                path.add(indexToCity.get(i));
+                int prevSize = paths.size();
+                coastin(i, destinationIdx, citiesLeft-1, visited, path, paths);
+                if (prevSize == paths.size()) {
+                    // could not find
+                    visited.remove(i);
+                }
+            }
+        }
+
+        visited.remove(cityIdx);
+        path.pop();
+        if (!path.isEmpty()) {
+            path.pop();
+        }
+    }
 }
