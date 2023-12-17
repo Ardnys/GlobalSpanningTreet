@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class InputParser {
@@ -44,7 +43,7 @@ public class InputParser {
                 var tokens = Stream.of(line.split(" ")).
                         filter(s -> !s.isEmpty()).
                         map(String::trim).
-                        collect(Collectors.toList());
+                        toList();
 
                 for (var token : tokens) {
                     if (Arrays.asList(transportation).contains(token)) {

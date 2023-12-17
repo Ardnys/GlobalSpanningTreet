@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Graph {
@@ -23,6 +22,7 @@ public class Graph {
             adjMatrix.add(row);
         }
     }
+
     public void execute(Queue<Command> commandQueue) {
         // TODO: convert commands into things that can be executed in the functions here
     }
@@ -60,7 +60,7 @@ public class Graph {
         var transports = Stream.of(order.split(" "))
                 .filter(s -> !s.isEmpty())
                 .map(String::trim)
-                .collect(Collectors.toList());
+                .toList();
         for (var t : transports) {
             int times = Integer.parseInt(t.substring(1));
             String transType = t.substring(0, 1);
@@ -195,7 +195,7 @@ public class Graph {
         var neighs = adjMatrix.get(cityIdx);
         for (int i = 0; i < neighs.size(); i++) {
             if (path.contains(indexToCity.get(i))) continue;
-            var trans = neighs.get(i).stream().filter(t -> t == type).collect(Collectors.toList());
+            var trans = neighs.get(i).stream().filter(t -> t == type).toList();
             if (trans.isEmpty()) continue;
             path.add(indexToCity.get(i));
             int prevSize = paths.size();

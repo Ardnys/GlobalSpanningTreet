@@ -6,15 +6,13 @@ public class Main {
         CommandParser commandParser = new CommandParser(commandFilePath);
         // absolutely perfectly readable code
         inputParser.parse().ifPresentOrElse(
-                graph -> {
-                    commandParser.parse().ifPresentOrElse(
-                            graph::execute,
-                            () -> {
-                                System.err.println("Could not receive commands to execute");
-                                System.exit(1);
-                            }
-                    );
-                },
+                graph -> commandParser.parse().ifPresentOrElse(
+                        graph::execute,
+                        () -> {
+                            System.err.println("Could not receive commands to execute");
+                            System.exit(1);
+                        }
+                ),
                 () -> {
                     System.err.println("ERROR: Could not receive the graph.");
                     System.exit(1);

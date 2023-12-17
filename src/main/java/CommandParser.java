@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 public class CommandParser {
 
     private static final Map<String, CommandType> commandMap = new HashMap<>();
+
     static {
         commandMap.put("Q1", CommandType.TRANSFER);
         commandMap.put("Q2", CommandType.NCITIES);
@@ -21,10 +22,13 @@ public class CommandParser {
         commandMap.put("NCITIES", CommandType.NCITIES);
         commandMap.put("TYPE", CommandType.TYPE);
     }
+
     private final String filePath;
+
     public CommandParser(String filePath) {
         this.filePath = filePath;
     }
+
     public Optional<Queue<Command>> parse() {
         Queue<Command> commandQueue = new ArrayDeque<>();
         try (var reader = Files.newBufferedReader(Paths.get(filePath))) {
@@ -54,6 +58,7 @@ public class CommandParser {
         }
         return Optional.of(commandQueue);
     }
+
     private void resolveTokens(List<String> tokens, String userCommand, Queue<Command> commandQueue) {
         CommandType commandType = commandMap.getOrDefault(userCommand.toUpperCase(), CommandType.NONE);
         String fromCity = tokens.get(1);
@@ -69,7 +74,7 @@ public class CommandParser {
             case TYPE -> {
                 if (tokens.size() > 4) {
                     // TODO: show user the arguments and which one the system took
-                    System.err.println("Too many arguments in "+ userCommand + ". Only first is taken.");
+                    System.err.println("Too many arguments in " + userCommand + ". Only first is taken.");
                     // it's not a breaking error so I think I can deal with it like this
                 }
                 var type = tokens.get(3).toUpperCase();
@@ -78,7 +83,7 @@ public class CommandParser {
                     case "R", "RAILWAY", "RAIL" -> Transportation.RAILWAY;
                     case "H", "HIGHWAY", "HIGH" -> Transportation.HIGHWAY;
                     default -> {
-                        System.err.println("Invalid transportation type in " + userCommand  +" command");
+                        System.err.println("Invalid transportation type in " + userCommand + " command");
                         yield null;
                     }
                 };
@@ -97,7 +102,7 @@ public class CommandParser {
             }
             case NCITIES -> {
                 if (tokens.size() > 4) {
-                    System.err.println("Too many arguments in " + userCommand );
+                    System.err.println("Too many arguments in " + userCommand);
                     // TODO: show user the arguments and which one the system took
                 }
                 try {
