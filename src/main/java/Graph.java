@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +13,7 @@ public class Graph {
     private final Map<Integer, String> indexToCity = new HashMap<>();
     private final Map<String, Integer> cityToIndex = new HashMap<>();
     private final List<List<List<Transportation>>> adjMatrix = new ArrayList<>();
+    private final StringBuilder output = new StringBuilder();
     private final int numberOfVertices;
 
     public Graph(int n) {
@@ -24,7 +28,24 @@ public class Graph {
     }
 
     public void execute(Queue<Command> commandQueue) {
-        // TODO: convert commands into things that can be executed in the functions here
+        while (!commandQueue.isEmpty()) {
+            var command = commandQueue.poll();
+            switch (command.commandType()) {
+                case TRANSFER -> q1(command.from(), command.to(), String.join(" ", command.arguments()));
+                case NCITIES -> q2(command.from(), command.to(), Integer.parseInt(command.arguments().get(0)));
+                case TYPE -> q3(command.from(), command.to(), Transportation.valueOf(command.arguments().get(0)));
+                case NONE -> System.err.println("Illegal command. Skipping...");
+            }
+        }
+        writeOutputFile();
+    }
+
+    private void writeOutputFile() {
+        try (var writer = Files.newBufferedWriter(Paths.get("output.txt"))) {
+            writer.write(output.toString());
+        } catch (IOException e) {
+            System.err.println("ERROR: could not write to output file: " + e.getMessage());
+        }
     }
 
     public void addEdge(int i, int j, Transportation type) {
@@ -51,7 +72,7 @@ public class Graph {
         }
     }
 
-    private String q1(String city1, String city2, String order) {
+    private void q1(String city1, String city2, String order) {
         var city1Idx = cityToIndex.get(city1);
         var destIdx = cityToIndex.get(city2);
 
@@ -70,24 +91,27 @@ public class Graph {
                 case "R" -> type = Transportation.RAILWAY;
                 case "H" -> type = Transportation.HIGHWAY;
             }
-            System.out.printf("(%s,%s) -> %d%n", transType, type, times);
+//            System.out.printf("(%s,%s) -> %d%n", transType, type, times);
             for (int i = 0; i < times; i++) {
                 transOrder.add(type);
             }
         }
-        for (var t : transOrder) {
-            System.out.printf("%s ", t);
-        }
-        System.out.println();
+//        for (var t : transOrder) {
+//            System.out.printf("%s ", t);
+//        }
+//        System.out.println();
 
         Stack<String> path = new Stack<>();
 
         path.add(indexToCity.get(city1Idx));
         boolean yes = cruisin(city1Idx, 0, transOrder, destIdx, path);
-        System.out.printf("found: %b%nset: %nstr: %s%n", yes, path);
 
-        // TODO: fix return statement
-        return "";
+        if (yes) {
+            var pathsStr = String.join(" ", path);
+            var hyphens = String.valueOf('‒').repeat(pathsStr.length());
+            output.append(String.format("Q1/TRANSFER%nFrom: %s%nTo: %s%nUsing: %s%n%s%n%s%n%s%n",
+                    city1, city2, order, hyphens, pathsStr, hyphens));
+        }
     }
 
     private boolean cruisin(int cityIdx, int orderIdx, List<Transportation> order, int destinationIdx,
@@ -101,22 +125,26 @@ public class Graph {
             boolean validMove = neighs.get(i).contains(trans) && !path.contains(indexToCity.get(i));
             if (orderIdx == order.size() - 1 && validMove) {
 //                System.out.printf("cruisin in %s to %s by %s%n", indexToCity.get(cityIdx), indexToCity.get(i), trans);
+                path.add(order.get(orderIdx).toString());
                 path.add(indexToCity.get(i));
 
                 if (cruisin(i, orderIdx + 1, order, destinationIdx, path)) {
                     return true;
                 } else {
                     path.pop();
+                    path.pop();
 //                    System.out.println("trying again");
                 }
             } else {
                 if (i != destinationIdx && validMove) {
 //                    System.out.printf("cruisin in %s to %s by %s%n", indexToCity.get(cityIdx), indexToCity.get(i), trans);
+                    path.add(order.get(orderIdx).toString());
                     path.add(indexToCity.get(i));
 
                     if (cruisin(i, orderIdx + 1, order, destinationIdx, path)) {
                         return true;
                     } else {
+                        path.pop();
                         path.pop();
 //                        System.out.println("trying again");
                     }
@@ -124,19 +152,23 @@ public class Graph {
             }
         }
         path.pop();
+        path.pop();
         return false;
     }
 
-    private List<String> q2(String city1, String city2, int nCities) {
+    private void q2(String city1, String city2, int nCities) {
         Stack<String> path = new Stack<>();
         List<String> paths = new ArrayList<>();
 
         path.add(city1);
 
         coastin(cityToIndex.get(city1), cityToIndex.get(city2), nCities, path, paths);
-        System.out.println(String.join("\n", paths));
+//        System.out.println(String.join("\n", paths));
 
-        return new ArrayList<>();
+        var hyphens = String.valueOf('‒').repeat(paths.get(0).length());
+        var pathsStr = String.join("\n", paths);
+        output.append(String.format("Q2/NCITIES%nFrom: %s%nTo: %s%nVisiting %d cities%nNumber of paths found: %d%n%s%n%s%n%s%n",
+                city1, city2, nCities, paths.size(), hyphens, pathsStr, hyphens));
     }
 
     private void coastin(int cityIdx, int destinationIdx, int citiesLeft,
@@ -172,16 +204,18 @@ public class Graph {
         }
     }
 
-    private List<String> q3(String city1, String city2, Transportation type) {
+    private void q3(String city1, String city2, Transportation type) {
         Stack<String> path = new Stack<>();
         List<String> paths = new ArrayList<>();
 
         path.add(city1);
 
         driftin(cityToIndex.get(city1), cityToIndex.get(city2), type, path, paths);
-        System.out.println(String.join("\n", paths));
 
-        return new ArrayList<>();
+        var hyphens = String.valueOf('‒').repeat(paths.get(0).length());
+        var pathsStr = String.join("\n", paths);
+        output.append(String.format("Q3/TYPE%nFrom: %s%nTo: %s%nBy: %s%nNumber of paths found: %d%n%s%n%s%n%s%n",
+                city1, city2, type.toString(), paths.size(), hyphens, pathsStr, hyphens));
     }
 
     private void driftin(int cityIdx, int destinationIdx, Transportation type,

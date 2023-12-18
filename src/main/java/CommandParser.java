@@ -69,7 +69,7 @@ public class CommandParser {
                 List<String> args = tokens.subList(3, tokens.size());
                 Command command = new Command(commandType, fromCity, toCity, args);
                 commandQueue.add(command);
-                System.out.println("Added command: " + command);
+//                System.out.println("Added command: " + command);
             }
             case TYPE -> {
                 if (tokens.size() > 4) {
@@ -98,7 +98,7 @@ public class CommandParser {
                 // reduce the complexity of the execution. It's going to be complicated somewhere. Let it be
                 // before it's converted to Command type.
                 commandQueue.add(command);
-                System.out.println("Added command: " + command);
+//                System.out.println("Added command: " + command);
             }
             case NCITIES -> {
                 if (tokens.size() > 4) {
@@ -109,7 +109,7 @@ public class CommandParser {
                     var n = Integer.parseInt(tokens.get(3));
                     Command command = new Command(commandType, fromCity, toCity, List.of(String.valueOf(n)));
                     commandQueue.add(command);
-                    System.out.println("Added command: " + command);
+//                    System.out.println("Added command: " + command);
                     // again, parsed it just to make it graceful. maybe it's stupid but it's late at night
                     // and I am FEELING it
                 } catch (NumberFormatException e) {
