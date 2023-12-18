@@ -2,7 +2,7 @@ Airway
       Cities  City1  City2  City3  City4  City5
 City1          0        1        1        0        1
 City2          1        0        0        1        1
-City3          1        0        0        1        0
+City3          1        1        0        1        0
 City4          0        1        1        0        0
 City5          1        1        0        0        0
 

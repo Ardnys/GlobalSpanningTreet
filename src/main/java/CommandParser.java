@@ -85,7 +85,7 @@ public class CommandParser {
                     }
                 };
                 trans.ifPresentOrElse(t -> {
-                    Command command = new Command(commandType, fromCity, toCity, List.of(trans.toString()));
+                    Command command = new Command(commandType, fromCity, toCity, List.of(t.toString()));
                     commandQueue.add(command);
                 }, () -> {
                 });
@@ -109,29 +109,7 @@ public class CommandParser {
                     System.err.println("Expected an integer in " + userCommand + " but found " + tokens.get(3));
                 }
             }
-            case NONE -> {
-                System.err.println("Invalid command " + userCommand);
-                var projectLabel = """
-                         _____ _       _           _   _____                         _               _____             _  \s
-                        |  __ \\ |     | |         | | /  ___|                       (_)             |_   _|           | | \s
-                        | |  \\/ | ___ | |__   __ _| | \\ `--. _ __   __ _ _ __  _ __  _ _ __   __ _    | |_ __ ___  ___| |_\s
-                        | | __| |/ _ \\| '_ \\ / _` | |  `--. \\ '_ \\ / _` | '_ \\| '_ \\| | '_ \\ / _` |   | | '__/ _ \\/ _ \\ __|
-                        | |_\\ \\ | (_) | |_) | (_| | | /\\__/ / |_) | (_| | | | | | | | | | | | (_| |   | | | |  __/  __/ |_\s
-                         \\____/_|\\___/|_.__/ \\__,_|_| \\____/| .__/ \\__,_|_| |_|_| |_|_|_| |_|\\__, |   \\_/_|  \\___|\\___|\\__|
-                                                            | |                               __/ |                       \s
-                                                            |_|                              |___/                        \s
-                        """;
-                var helpPage = """
-                        Q1/TRANSFER: City1 City2 Ai Rj Hk | where i,j,k are unsigned integers.
-                            London Sydney A2 R1 H3. Start in London, use 2 Airways, 1 Railway, 3 Highways, and finish in Sydney. Return one path in the given order.
-                        Q2/NCITIES: City1 City2 N | where N is an unsigned integer.
-                            Sydney Melbourne 3. Start from Sydney, pass 3 different cities, finish in Melbourne. Return all possible paths.
-                        Q3/TYPE: City1 City2 Type | where type is the transportation type.
-                            Paris London Railway. Start in Paris and finish in London using only the given transportation type. Return all possible paths.
-                        """;
-                System.out.printf("%s%n%s%n", projectLabel, helpPage);
-                // TODO: provide a helpful message that informs the user about available commands
-            }
+            case NONE -> System.err.println("Invalid command " + userCommand);
         }
     }
 }
