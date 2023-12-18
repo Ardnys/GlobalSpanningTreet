@@ -12,14 +12,12 @@ import java.util.stream.Stream;
 public class InputParser {
     private final String[] transportation = {"Airway", "Railway", "Highway"};
     private final String path;
-    Map<String, List<List<String>>> mapOfMatrices = new HashMap<>();
-    List<String> indexes = new ArrayList<>();
+    private final Map<String, List<List<String>>> mapOfMatrices = new HashMap<>();
+    private final List<String> indexes = new ArrayList<>();
 
     public InputParser(String path) {
         this.path = path;
     }
-
-
 
     public Optional<Graph> parse() {
         try (var reader = Files.newBufferedReader(Paths.get(path))) {

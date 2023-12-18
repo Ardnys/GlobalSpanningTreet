@@ -76,25 +76,22 @@ public class CommandParser {
                 }
                 var type = tokens.get(3).toUpperCase();
                 var trans = switch (type) {
-                    case "A", "AIRWAY", "AIR" -> Transportation.AIRWAY;
-                    case "R", "RAILWAY", "RAIL" -> Transportation.RAILWAY;
-                    case "H", "HIGHWAY", "HIGH" -> Transportation.HIGHWAY;
+                    case "A", "AIRWAY", "AIR" -> Optional.of(Transportation.AIRWAY);
+                    case "R", "RAILWAY", "RAIL" -> Optional.of(Transportation.RAILWAY);
+                    case "H", "HIGHWAY", "HIGH" -> Optional.of(Transportation.HIGHWAY);
                     default -> {
                         System.err.println("Invalid transportation type in " + userCommand + " command");
-                        yield null;
+                        yield Optional.empty();
                     }
                 };
-                if (trans == null) {
-                    return;
-                }
-                // maybe an ERROR type for the transportation to eliminate null but whatever
-                // also enums are amazing. look at it
-
-                Command command = new Command(commandType, fromCity, toCity, List.of(trans.toString()));
+                trans.ifPresentOrElse(t -> {
+                    Command command = new Command(commandType, fromCity, toCity, List.of(trans.toString()));
+                    commandQueue.add(command);
+                }, () -> {
+                });
                 // the reason why I spend all the effort to convert the type to proper transportation is to
                 // reduce the complexity of the execution. It's going to be complicated somewhere. Let it be
                 // before it's converted to Command type.
-                commandQueue.add(command);
 //                System.out.println("Added command: " + command);
             }
             case NCITIES -> {
