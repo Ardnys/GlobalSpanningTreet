@@ -62,15 +62,6 @@ public class Graph {
         cityToIndex.put(city, idx);
     }
 
-    public void printGraph() {
-        for (int i = 0; i < adjMatrix.size(); i++) {
-            var row = adjMatrix.get(i);
-            for (int j = 0; j < row.size(); j++) {
-                System.out.printf("(%d,%d) %s ", i, j, row.get(j));
-            }
-            System.out.println();
-        }
-    }
 
     private void q1(String city1, String city2, String order) {
         var city1Idx = cityToIndex.get(city1);
@@ -96,10 +87,6 @@ public class Graph {
                 transOrder.add(type);
             }
         }
-//        for (var t : transOrder) {
-//            System.out.printf("%s ", t);
-//        }
-//        System.out.println();
 
         Stack<String> path = new Stack<>();
 

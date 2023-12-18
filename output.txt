@@ -2,15 +2,15 @@ Q1/TRANSFER
 From: City1
 To: City2
 Using: H2 R1 A1
-‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒
+____________________________________________________________
 City1 HIGHWAY City5 HIGHWAY City3 RAILWAY City4 AIRWAY City2
-‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒
+____________________________________________________________
 Q2/NCITIES
 From: City1
 To: City2
 Visiting 3 cities
 Number of paths found: 46
-‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒
+_____________________________________________________________________
 [City1, AIRWAY, City3, RAILWAY, City4, RAILWAY, City5, AIRWAY, City2]
 [City1, AIRWAY, City3, HIGHWAY, City4, RAILWAY, City5, AIRWAY, City2]
 [City1, AIRWAY, City3, AIRWAY, City4, RAILWAY, City5, AIRWAY, City2]
@@ -57,14 +57,4 @@ Number of paths found: 46
 [City1, AIRWAY, City5, RAILWAY, City4, HIGHWAY, City3, HIGHWAY, City2]
 [City1, AIRWAY, City5, RAILWAY, City4, AIRWAY, City3, RAILWAY, City2]
 [City1, AIRWAY, City5, RAILWAY, City4, AIRWAY, City3, HIGHWAY, City2]
-‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒‒
-Q3/TYPE
-From: City1
-To: City2
-By: HIGHWAY
-Number of paths found: 3
-‒‒‒‒‒‒‒‒‒‒‒‒‒‒
-[City1, City2]
-[City1, City5, City3, City2]
-[City1, City5, City3, City4, City2]
-‒‒‒‒‒‒‒‒‒‒‒‒‒‒
+_____________________________________________________________________

@@ -19,16 +19,6 @@ public class InputParser {
         this.path = path;
     }
 
-    public void printMatrices() {
-        for (Map.Entry<String, List<List<String>>> entry : mapOfMatrices.entrySet()) {
-            System.out.println(entry.getKey());
-            System.out.println(String.join(" ", indexes));
-            for (List<String> row : entry.getValue()) {
-                System.out.println(String.join(" ", row));
-            }
-            System.out.println("------------");
-        }
-    }
 
 
     public Optional<Graph> parse() {
